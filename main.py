@@ -29,14 +29,18 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(f"User {update.effective_user.name} triggered 'start' at "
+          f"{update.message.chat.type} chat {update.message.chat.id}")
+
     reply_text = ''
     if update.message.chat.type == telegram.Chat.PRIVATE:
         reply_text = f"Привет, меня зовут {update.get_bot().name}!\n" \
                      f'Я ботик, созданный Алексашкой для группы "Чат игнорщиков и вечно занятого Влада".\n' \
                      f'Я сделан с любовью, по крайней мере мне так сказал создатель 🤔'
-    elif update.message.chat.type == telegram.Chat.GROUP:
+    elif update.message.chat.type == telegram.Chat.GROUP or update.message.chat.type == telegram.Chat.SUPERGROUP:
         reply_text = f"Всем привет, меня зовут {update.get_bot().name}!\n" \
-                     f'Я ботик, созданный Алексашкой, спасибо, что пригласили меня в "{update.message.chat.title.title()}" 🥰'
+                     f'Я ботик, созданный Алексашкой, спасибо, что пригласили меня в ' \
+                     f'"{update.message.chat.title.title()}" 🥰'
     else:
         reply_text = f"Привет, меня зовут {update.get_bot().name}!\n" \
                      f'Что я тут делаю? 🤔'
@@ -45,12 +49,21 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def help_back(update: Update) -> str:
+    if hasattr(update, "effective_user"):
+        user_name = update.effective_user.name
+    else:
+        user_name = update.from_user.name
+
+    print(f"User {user_name} triggered 'help' at "
+          f"{update.message.chat.type} chat {update.message.chat.id}")
+
     reply_text = ''
+
     if update.message.chat.type == telegram.Chat.PRIVATE:
         reply_text = f"Добавь меня в чат, я могу много интересного!\n" \
                      f'Ну, пока что нет, но папа сказал, что я расту... вроде как.\n' \
                      f'Можешь посмотреть ниже, что именно я могу:'
-    elif update.message.chat.type == telegram.Chat.GROUP:
+    elif update.message.chat.type == telegram.Chat.GROUP or update.message.chat.type == telegram.Chat.SUPERGROUP:
         reply_text = f"Я рад быть в этом чатике, в долгу не останусь, я могу много интересного!\n" \
                      f'Ну, пока что нет, но папа сказал, что я расту... вроде как.\n' \
                      f'Можешь посмотреть ниже, что именно я могу:'
@@ -82,6 +95,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE, edit=
 async def inline_keyboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+
+    print(f"User {update.effective_user.name} triggered '{query.data}' at "
+          f"{query.message.chat.type} chat {query.message.chat.id}")
 
     d_type, data = parse_data(query.data)
 
