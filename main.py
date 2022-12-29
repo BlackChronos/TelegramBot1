@@ -1,8 +1,5 @@
 import logging
 
-from dotenv import load_dotenv
-import os
-
 import telegram
 from telegram import __version__ as TG_VER
 
@@ -26,7 +23,6 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-load_dotenv()
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"User {update.effective_user.name} triggered 'start' at "
