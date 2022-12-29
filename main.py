@@ -129,7 +129,7 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"An error occurred at update {update}. Cause of error was {context.error}")
 
 def main() -> None:
-    application = Application.builder().token(os.getenv('TOKEN')).build()
+    application = Application.builder().token("5614824616:AAFTDG7Ls2ZeL4J-2GVgC1TGbSIJ5gePZbU").build()
 
     # Commands
     application.add_handler(CommandHandler('start', start_command))
